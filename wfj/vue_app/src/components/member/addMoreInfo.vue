@@ -1,7 +1,7 @@
 <template>
     <div class="app-perfectInfo">
         <header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="javascript:;"></a>
+			<a @click="previous" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="javascript:;"></a>
 			<h1 id="title" class="mui-title">更多资料</h1>
 		</header>
 		<div class="mui-slider-item">
@@ -28,6 +28,9 @@
             }
         },
         methods:{
+            previous(){
+                history.go(-1);
+            },
             //显示用户所有资料，根据是否显示确定颜色的不同
             getAllInfo(){
                 this.uid = this.$route.query.uid;

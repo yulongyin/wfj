@@ -1,7 +1,7 @@
 <template>
     <div class="app-login">
         <div class="mui-bar mui-bar-nav">
-			<h1 class="mui-title">用户登录</h1>
+			<h1 class="mui-title">用户注册</h1>
 		</div>
         
         <div class="mui-card">
@@ -10,6 +10,7 @@
                     <div class="login">
                         <input v-model="uname" class="uname" type="text" placeholder="请输入用户名">
                         <input v-model="upwd" class="upwd" type="password" placeholder="请输入密码">
+                        <input v-model="qpwd" class="qpwd" type="password" placeholder="请输入确认密码">
                     </div>
                 </div>
             </div>
@@ -19,13 +20,7 @@
             <div class="mui-card-content">
                 <div class="mui-card-content-inner">
                     <div class="mui-content-padded">
-                        <ul>
-                            <li><router-link to="/register">立即注册</router-link></li>
-                            <li><a href="javascript:;">忘记密码</a></li>
-                        </ul>
-                    </div>
-                    <div class="mui-content-padded">
-                        <button type="button" @click="login" class="mui-btn mui-btn-primary mui-btn-block">登录</button>
+                        <button type="button" @click="login" class="mui-btn mui-btn-primary mui-btn-block">立即注册</button>
                     </div>
                 </div>
             </div>
@@ -41,6 +36,7 @@
             return {
 				uname:"",
                 upwd:"",
+                qpwd:"",
                 uid:0
             }
         },
@@ -48,21 +44,26 @@
 			login(){
                 var uname = this.uname;
                 var upwd = this.upwd;
-                //console.log(uname,upwd);
-                var url = "http://127.0.0.1:3000/login?uname="+uname+"&upwd="+upwd;
-                //var param = `uname=${uname}&upwd=${upwd}`;
-                this.$http.get(url).then(res=>{
-                    if(res.body.code == 1){
-                        this.uid = res.body.data[0].uid;
-                        //console.log(this.uid);
-                        sessionStorage["uid"] = this.uid;
-                        Toast("登录成功");
-                        this.$router.push("/member?uid="+this.uid);
-                    }else{
-                        Toast(res.body.msg);
-                    }
-                    //console.log(res);
-                })
+                var qpwd = this.qpwd;
+                if(upwd == qpwd){
+                    var url = "http://127.0.0.1:3000/register";
+                    var param = `uname=${uname}&upwd=${upwd}&qpwd=${qpwd}`;
+                    this.axios.post(url,param).then(res=>{
+                        console.log(res);
+                        if(res.data.code == 1){
+                            //console.log(this.uid);
+                            Toast("注册成功");
+                            this.$router.push("/login");
+
+                        }else{
+                            Toast(res.data.msg);
+                            console.log(41);
+                        }
+                        //console.log(res);
+                    })
+                }else{
+                    Toast("重复密码输入有误")
+                }
             }
         },
 		components:{
@@ -71,7 +72,7 @@
     }
 </script>
 <style>
-    .mui-card-content-inner .login{
+    .login{
         width:100%;
     }
     .login span{
@@ -81,6 +82,7 @@
         line-height:40px;
     }
     .login input[type=text],.login input[type=password]{
+        float:left;
         width:100%;
     }
     .mui-card .mui-content-padded ul{

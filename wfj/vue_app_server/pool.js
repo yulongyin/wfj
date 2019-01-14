@@ -7,6 +7,7 @@ var pool = mysql.createPool({
     user:"root",
     password:"",
     database:"wfj",
+    multipleStatements: true,   //允许执行多条sql语句
     connectionLimit:20
 });
 

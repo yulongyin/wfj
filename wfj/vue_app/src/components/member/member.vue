@@ -1,7 +1,6 @@
 <template>
     <div class="app-member">
         <header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 id="title" class="mui-title">会员中心</h1>
 		</header>
         <ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
@@ -31,70 +30,87 @@
                     完善会员资料
                 </router-link>
             </li>
-        </ul>
-        <ul class="mui-table-view">
             <li class="mui-table-view-cell">
-                <a class="mui-navigate-right">
+                <a class="mui-navigate-right" @click="construction">
                     <img src="../../img/vip_data_02.png" alt="">
                     人脉资源
                 </a>
             </li>
-        </ul>
-        <ul class="mui-table-view">
             <li class="mui-table-view-cell">
-                <a class="mui-navigate-right">
+                <a class="mui-navigate-right" @click="order">
                     <img src="../../img/vip_data_03.png" alt="">
                     订单管理
                 </a>
             </li>
-        </ul>
-        <ul class="mui-table-view">
             <li class="mui-table-view-cell">
-                <a class="mui-navigate-right">
+                <a class="mui-navigate-right" @click="construction">
                     <img src="../../img/vip_data_05.png" alt="">
                     我的钱包
                 </a>
             </li>
-        </ul>
-        <ul class="mui-table-view">
-            <li class="mui-table-view-cell">
+            <li class="mui-table-view-cell" @click="construction">
                 <a class="mui-navigate-right">
                     <img src="../../img/vip_data_06.png" alt="">
                     金币池
                 </a>
             </li>
-        </ul>
-        <ul class="mui-table-view">
             <li class="mui-table-view-cell">
-                <a class="mui-navigate-right">
+                <a class="mui-navigate-right" @click="construction">
                     <img src="../../img/vip_data_07.png" alt="">
                     分享产品
                 </a>
             </li>
         </ul>
+        <div class="mui-card">
+		    <div class="mui-content-padded">
+		        <button type="button" @click="logout" class="mui-btn mui-btn-danger mui-btn-block">注销</button>
+		    </div>
+        </div>
+    	
     </div>
 </template>
 <script>
+    
+    import {Toast} from 'mint-ui'
     export default {
         data(){
             return {
                 list:[{uname:""}],
-                uid:0
+                uid:sessionStorage["uid"]
                 
             }
         },
         methods:{
             getInfo(){
-                this.uid = this.$route.query.uid;
                 var url = "member?uid="+this.uid;
                 this.$http.get(url).then(result=>{
                     this.list = result.body;
+                    //console.log(this.list);
+                });
+            },
+            //给还没有实现的列表添加  "建设中..."  提示
+            construction(){
+                Toast("建设中...")
+            },
+            logout(){
+                sessionStorage.removeItem("uid");
+                Toast("注销成功");
+                this.$router.push("/");
+            },
+            //订单管理
+            order(){
+                var url = "http://127.0.0.1:3000/order?uid="+this.uid;
+                this.$http.get(url).then(res=>{
+                    this.$router.push("/order");
                 });
             }
         },
         created() {
             this.getInfo();
         },
+		components:{
+			
+		}
     }
 </script>
 <style>

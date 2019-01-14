@@ -1,7 +1,7 @@
 <template>
     <div class="app-perfectInfo">
         <header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="javascript:;"></a>
+			<a @click="previous" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="javascript:;"></a>
 			<h1 id="title" class="mui-title">个人名片</h1>
 		</header>
 		<img id="qrcode" src="../../img/huiyuan_01.png" />
@@ -49,15 +49,17 @@
                         uname:""
                     }
                 ],
-                uid:0,
+                uid:sessionStorage["uid"],
                 types:[],
                 types_info:[],
                 adSex:1
             }
         },
         methods:{
+            previous(){
+                history.go(-1);
+            },
             getInfo(){
-                this.uid = this.$route.query.uid;
                 var url = "perfect?uid="+this.uid;
                 this.$http.get(url).then(result=>{
                     this.list = result.body;
@@ -72,7 +74,6 @@
             }, 
             
             getType(){
-                this.uid = this.$route.query.uid;
                 var url = "getType?uid="+this.uid;
                 this.$http.get(url).then(result=>{
                     this.types = result.body;
@@ -82,7 +83,6 @@
 
             //提交信息
             submits(){
-                this.uid = this.$route.query.uid;
                 var url = "update?";
                 //console.log(this.types)
                 for(var i = 0;i < this.types.length;i++){
@@ -97,11 +97,11 @@
                 //console.log("this.types_info：：属性：：")
                 //console.log(this.types_info);
                 url += "uid="+this.uid;
-                console.log(url);
                 this.$http.get(url).then(result=>{
-                    console.log(result);
+                    //console.log(result);
                     if(result.body.code == 1){
                         Toast(result.body.msg);
+                        this.$router.push("/member?uid="+this.uid);
                     }else{
                         Toast(result.body.msg);
                     }
@@ -140,4 +140,5 @@
         vertical-align:middle;
         margin-left:20px;
     }
+    .oa-contact-cell .oa-contact-avatar{width:30%;line-height:40px;}
 </style>

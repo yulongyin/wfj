@@ -15,9 +15,33 @@ app.use(cors({
 //指定静态目录`
 // __dirname 当前文件的绝对路径
 app.use(express.static(__dirname + "/public"));
+
+
+//引入第三方模块:bodyParser 处理post请求
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({
+  extended:false
+}));
+
+
 //绑定监听端口
 app.listen(3000);
 
+
+
+
+
+//7.1加载第三方模块 session
+const session = require("express-session");
+//7.2对模块进行配置
+app.use(session({
+  secret:"128位随机字符",   //安全字符串
+  resave:false,            //请求保存
+  saveUninitialized:true,    //初始化保存
+  cookie:{
+    maxAge:1000 * 60 * 60 * 24  //session存留的时间
+  }
+}))
 
 
 //个人名片
@@ -137,8 +161,194 @@ app.get("/updateInfo",(req,res)=>{
     })
 })
 
+//用户登录
+app.get("/login",(req,res)=>{
+    var uname = req.query.uname;
+    var upwd = req.query.upwd;
+    var sql = "select * from login where uname=? and upwd=?";
+    pool.query(sql,[uname,upwd],(err,result)=>{
+        if(err) throw err;
+        if(result.length == 1){
+            req.session.uid = result[0].uid
+            //console.log(result[0].uid);
+            res.send({code:1,data:result})
+        }else{
+            res.send({code:0,msg:"登录失败"});
+        }
+        
+    })
+})
+
+//用户注册
+app.post("/register",(req,res)=>{
+    var uname = req.body.uname;
+    var upwd = req.body.upwd;
+    var qpwd = req.body.qpwd;
+    console.log(upwd,qpwd);
+    var uid = 1;
+    var nextId = 0;
+    if(upwd != qpwd){
+        res.send({code:2,msg:"重复密码有误"})
+        return;
+    }
+    var reg = "select uname from login where uname = ?";
+    pool.query(reg,[uname],(err,result)=>{
+        if(err) throw err;
+        if(result.length == 1){
+            res.send({code:0,msg:"用户名已存在"})
+        }else{
+            var sql = "insert into login(uname,upwd) values(?,?)";
+            pool.query(sql,[uname,upwd],(err,result)=>{
+                if(err) throw err;
+                res.send({code:1,data:result,msg:"注册成功"});
+            });
+            var sqlUser = "insert into users(uname,upwd) values(?,?)";
+            pool.query(sqlUser,[uname,upwd],(err,result)=>{
+                if(err) throw err;
+                
+                var arr = "select * from users where uid=1";  //获取列
+                console.log("users内的id:"+uid);
+                var info_type = [];
+                pool.query(arr,[uid],(err,result)=>{
+                    if(err) throw err;
+                    var count = "select uid from user_info group by uid";
+                    pool.query(count,(err,res)=>{
+                        if(err) throw err;
+                        nextId = parseInt(res.length+1);
+                    
+                        var types = "select info_type,users_info from user_info where uid="+uid;
+                        var sqlInfo = "";
+                        pool.query(types,[uid],(errs,results)=>{
+                            if(errs) throw errs;
+                            for(var i = 0;i<results.length;i++){
+                                info_type.push(results[i].info_type);  //保存
+                                //insert into user_info(usid,uid,info_type,users_info,isShow) values(null,2,"uname","姓名",1);
+                                sqlInfo += " insert into user_info(usid,uid,info_type,users_info,isShow) values(null,"+nextId+",'"+results[i].info_type+"','"+results[i].users_info+"',1);"
+                            }
+                            // console.log("sqlInfo结果：")
+                            // console.log(sqlInfo);
+                            pool.query(sqlInfo,[],(errs,result)=>{
+                                if(errs) throw errs;
+                                //console.log("sqlInfo结果result");
+                                //console.log(result);
+                            })
+                        })
+                    })
+                    //res.send({code:1,data:result});
+                });
+            });
+            
+        }
+        
+    })
+})
 
 
 
+//功能一:首页轮播图
+app.get("/imagelist",(req,res)=>{
+    var obj = [
+        { id: 1, img_url: "http://127.0.0.1:3000/img/banner1.png" },
+        { id: 2, img_url: "http://127.0.0.1:3000/img/banner2.png" },
+        { id: 3, img_url: "http://127.0.0.1:3000/img/banner3.png" },
+        { id: 4, img_url: "http://127.0.0.1:3000/img/banner4.png" },
+        { id: 5, img_url: "http://127.0.0.1:3000/img/banner5.png" },
+        { id: 6, img_url: "http://127.0.0.1:3000/img/banner6.png" },
+        { id: 7, img_url: "http://127.0.0.1:3000/img/banner7.png" }
+    ];
+    res.send(obj);
+ });
+ 
+ //园区招商图片
+ app.get("/attract",(req,res)=>{
+     var obj = [
+        { id: 1, aid:1, title:"大型企业平台管理商城系统", price:200000, img_url: "http://127.0.0.1:3000/img/com_attract01.png" },
+        { id: 2, aid:1, title:"中型企业平台管理商城系统", price:100000, img_url: "http://127.0.0.1:3000/img/com_attract02.png" },
+        { id: 3, aid:1, title:"小型企业平台管理商城系统", price:50000, img_url: "http://127.0.0.1:3000/img/com_attract03.png" },
+        { id: 4, aid:1, title:"微型企业平台管理商城系统", price:10000, img_url: "http://127.0.0.1:3000/img/com_attract04.png" },
+        { id: 5, aid:1, title:"小微型企业平台管理商城系统", price:3500, img_url: "http://127.0.0.1:3000/img/com_attract05.png" },
+        { id: 6, aid:1, title:"供应商企业平台管理商城系统", price:600, img_url: "http://127.0.0.1:3000/img/com_attract06.png" },
+        { id: 7, aid:2, title:"合作创业商城业主会员", price:10000, img_url: "http://127.0.0.1:3000/img/me_attract01.png" },
+        { id: 8, aid:2, title:"微分金商城业主会员", price:1680, img_url: "http://127.0.0.1:3000/img/me_attract02.png" },
+        { id: 9, aid:2, title:"代理商商城业主会员", price:100, img_url: "http://127.0.0.1:3000/img/me_attract03.png" },
+        { id: 10, aid:2, title:"VIP客户商城业主会员", price:10, img_url: "http://127.0.0.1:3000/img/me_attract04.png" },
+     ];
+     res.send(obj);
+ })
+
+ //查询所有商品
+ app.get("/product",(req,res)=>{
+     var sql = "select pid,title,subtitle,old_price,price,detail,(select img_url from pro_img where product.pid=pro_img.pid limit 1) as img_url from product ";
+     pool.query(sql,(err,result)=>{
+         if(err) throw err;
+         res.send(result);
+     })
+ })
 
 
+ //根据pid查询商品
+ app.get("/showProInfo",(req,res)=>{
+     var pid = req.query.pid;
+    var sql = "select pid,title,subtitle,old_price,price,detail from product where pid=?";
+    pool.query(sql,[pid],(err,result)=>{
+        if(err) throw err;
+        res.send(result);
+    });
+
+});
+//根据pid查询商品对应图片
+app.get("/showProImg",(req,res)=>{
+    var pid = req.query.pid;
+    var sql2 = "select img_url from pro_img where pid=?";
+    pool.query(sql2,[pid],(err,result)=>{
+        if(err) throw err;
+        res.send(result);
+    });
+   
+});
+
+app.post("/cart",(req,res)=>{
+    var uid = req.body.uid;
+    var pid = req.body.pid;
+    var count = parseInt(req.body.count);
+    var selsql = "select count(*) as num,count from cart where uid=? and pid=?";
+    pool.query(selsql,[uid,pid],(err,result)=>{
+        if(err) throw err;
+        if(result[0].count > 0){
+            var con = result[0].count;
+            count = parseInt(count+con);
+            var upsql = "update cart set count=?,isPay=0,isShow=1 where uid=? and pid=? ";
+            pool.query(upsql,[count,uid,pid],(err,result)=>{
+                if(err) throw err;
+                if(result.affectedRows > 0){
+                    res.send({code:1,msg:"修改成功"});
+                }else{
+                    res.send({code:1,msg:"修改失败"});
+                }
+            })
+        }else{
+            var sql = "insert into cart(uid,pid,count,isPay,isShow) values(?,?,?,0,1)";
+            pool.query(sql,[uid,pid,count],(err,result)=>{
+                if(err) throw err;
+                if(result.affectedRows > 0){
+                    res.send({code:1,msg:"添加成功"});
+                }else{
+                    res.send({code:1,msg:"添加失败"});
+                }
+            })
+        }
+    })
+})
+
+app.get("/order",(req,res)=>{
+    var uid = req.query.uid;
+    var sql = "select *,(select img_url from pro_img where pid=cart.pid limit 1) img_url from cart inner join product on cart.pid = product.pid where uid=? and isPay=0 and isShow=1";
+    pool.query(sql,uid,(err,result)=>{
+        if(err) throw err;
+        if(result.length == 0){
+            res.send({code:0,msg:"购物车为空",data:result})
+        }else{
+            res.send({code:1,msg:"查看购物车",data:result});
+        }
+    })
+})
