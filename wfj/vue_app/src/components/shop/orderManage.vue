@@ -11,7 +11,7 @@
                 <p>购物车空空如也~~</p>
                 <button @click="goToShop" class="mui-btn mui-btn-success">去逛逛</button>
             </div>
-            <div class="mui-card">
+            <!--div class="mui-card">
                 <ul class="hobby-title">
                     <li><img src="../../img/point.jpg" alt=""></li>
                     <li>猜你喜欢</li>
@@ -32,7 +32,10 @@
                             </div>
                     </li>
                 </ul> 
-            </div>
+            </div-->
+
+
+
         </div>
         <!--显示购物车内容-->
         <div v-else>
@@ -120,11 +123,11 @@
                     for(var item of this.product){
                         this.arr.push(item.pid);
                     }
-                    //console.log(this.arr);
                 })
             },
             //修改商品数量
             subCount(e){
+                console.log(e.target.query);
                 var num =parseInt(e.target.nextElementSibling.value);
                 if(num > 1){
                     num -= 1;
@@ -132,6 +135,7 @@
                 }
             },
             addCount(e){
+                console.log(e.target);
                 var num =parseInt(e.target.previousElementSibling.value);
                 if(num < 999){
                     num += 1;
@@ -150,7 +154,6 @@
                             this.allPrice -= this.product[i].price * this.product[i].count;
                         }
                     }
-                    //this.allPrice -= this.product[pid].price * this.product[pid].count;
                 } else {
                     // 选中该checkbox
                     for(var i = 0;i<this.arr.length;i++){
@@ -158,7 +161,6 @@
                             this.allPrice += this.product[i].price * this.product[i].count;
                         }
                     }
-                    //this.allPrice += this.product[pid].price * this.product[pid].count;
                     this.isChecked.push(pid)
                 }
             },
@@ -170,9 +172,11 @@
                     this.isChecked = []
                     this.product.forEach(function (item) {
                         this.isChecked.push(item.pid)
+                        this.allPrice += item.price * item.count;
                     }, this)
                 } else {
                     this.isChecked = []
+                    this.allPrice = 0;
                 }
             },
             //结算按钮，跳转到结算页面
@@ -184,9 +188,7 @@
             this.getCartInfo();
         },
         computed:{
-            getAllPrice(){
-                
-            }
+            
         }
     }
 </script>

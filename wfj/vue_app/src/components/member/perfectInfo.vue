@@ -6,7 +6,7 @@
 		</header>
 		<img id="qrcode" src="../../img/huiyuan_01.png" />
         <div class="perfectName">
-            <p>{{list[0].uname}}</p>
+            <p>{{list[0].user_name==""?list[0].uname:list[0].user_name}}</p>
             <p>会员</p>
         </div>
         

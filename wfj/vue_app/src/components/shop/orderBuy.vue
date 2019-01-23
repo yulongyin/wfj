@@ -24,6 +24,9 @@
                 </div>
             </li>
         </ul>
+
+
+
         <div>
             <ul class="mui-table-view mui-table-view-chevron" v-if="addr.length > 0">
                 <li class="mui-table-view-cell mui-media">
@@ -36,7 +39,6 @@
                     </a>
                 </li>
             </ul>
-            
             <ul class="mui-table-view mui-table-view-chevron" v-else>
                 <li class="mui-table-view-cell mui-media">
                     <a class="mui-navigate-right">
@@ -48,17 +50,19 @@
                         </div>
                     </a>
                 </li>
+
             </ul>
         </div>
 
-    	<div class="mui-card">
+
+        <div class="mui-card" :class="isHidden">
             <ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
                 <li class="mui-table-view-cell">
                     <div class="mui-table">
                         <div class="mui-table-cell mui-col-xs-10">
                             <ul class="mui-table-view">
                                 <li class="mui-table-view-cell mui-media" v-for="item of product" :key="product.index">
-                                    <a href="javascript:;">
+                                    <a href="javascript:;" class="mg-right">
                                         <img class="mui-media-object mui-pull-left" :src="item.img_url">
                                         <div class="mui-media-body">
                                             <p class="pro_title">{{item.title}}</p>
@@ -81,12 +85,10 @@
                 </li>
             </ul>
         </div>
-
-
-    	<div class="mui-card">
+        <div class="mui-card" :class="isHidden">
             <ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
                 <li class="mui-content-padded navigate_right">
-                    合计：<span style="color:red;">¥{{total}}</span>&nbsp;&nbsp;&nbsp;<button type="button" class="mui-btn mui-btn-danger">提交订单</button>
+                    合计：<span style="color:red;">¥{{total}}</span>&nbsp;&nbsp;&nbsp;<button type="button" class="mui-btn mui-btn-danger" @click="subOrder">提交订单</button>
                 </li>
             </ul>
         </div>
@@ -106,7 +108,8 @@
                 product:[],
                 isChecked:[],    //全选
                 arr:[],
-                total:0
+                total:0,
+                isHidden:""
             }
         },
         methods:{
@@ -118,12 +121,35 @@
                 var url = "http://127.0.0.1:3000/order?uid=" + this.uid;
                 this.$http.get(url).then(res=>{
                     this.product = res.body.data;
+                    if(this.product.length == 0){
+                        this.isHidden = "isHidden";
+                    }else{
+                        this.isHidden = "";
+                    }
                     for(var item of this.product){
                         this.arr.push(item.pid);
                         //获取总价
                         this.total += item.price * item.count;
                     }
                 })
+            },
+            
+            //提交订单
+            subOrder(){
+                var uid = this.uid;
+                var pid = this.arr;
+                if(pid.length != 0){
+                    var url = "subOrder?uid="+this.uid+"&pid="+pid;
+                    this.$http.get(url).then(res=>{
+                        console.log(res.body);
+                        if(res.body.code == 1){
+                            Toast(res.body.msg);
+                            history.go(-1);
+                        }else{
+                            Toast(res.body.msg);  
+                        }
+                    })
+                }
             },
             //获取收货地址
             getShopAddr(){
@@ -160,6 +186,9 @@
     }
 </script>
 <style scoped>
+    .isHidden{
+        display:none;
+    }
     .mui-card .mui-table-view .navigate_right{
         float:right;
         line-height:33px;
@@ -172,9 +201,20 @@
         width:auto;
         margin-top:35px;
     }
+    .mui-table-view .mui-table-view-cell .mg-right{
+        margin-right:0;
+        padding:20px 0;
+    }
+    .mui-table-view-chevron .mui-table-view-cell{
+        padding-right:15px;
+    }
     .mui-card .mui-table-view .mui-table-view-cell .mui-table .mui-table-cell a .mui-media-body{
-        width:200px;
+        width:220px;
         white-space:pre-wrap;
+    }
+    .mui-card .mui-table-view .mui-table-view-cell .mui-table .mui-table-cell a .mui-media-body p{
+        max-height:44px;
+        overflow:hidden;
     }
     .mui-card .mui-table-view .mui-table-view-cell .mui-table .mui-table-cell a .mui-media-body p input{
         width:26px;
@@ -201,6 +241,7 @@
     }
     .mui-table-view .mui-table-view-cell .mui-navigate-right{
         height:80px;
+        margin-right:0;
     }
     
     .mui-table-view .mui-table-view-cell .mui-navigate-right:after{
@@ -209,7 +250,8 @@
     }
     .mui-table-view .mui-table-view-cell .mui-navigate-right span.phone{
         width:80px;
-        float:right;
+        float:left;
+        margin-left:40px;
     }
     .mui-card .mui-table-view .mui-table-view-cell .mui-table .mui-table-cell a .mui-media-body p span:last-child{
         float:right;

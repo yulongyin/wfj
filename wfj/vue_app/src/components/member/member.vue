@@ -12,7 +12,7 @@
                         </div>
                         <div class="oa-contact-content mui-table-cell">
                             <div class="mui-clearfix">
-                                <h4 class="oa-contact-name">{{list[0].uname}}</h4>
+                                <h4 class="oa-contact-name">{{list[0].user_name==""?list[0].uname:list[0].user_name}}</h4>
                                 <span class="oa-contact-position mui-h6">会员</span>
                             </div>
                             <p class="oa-contact-email mui-h6">

@@ -67,7 +67,7 @@
                                 </button>
                             </li>
                             <li>
-                                <button type="button" class="mui-btn mui-btn-danger">
+                                <button type="button" @click="orderBuy" class="mui-btn mui-btn-danger">
                                     立即购买
                                 </button>
                             </li>
@@ -143,21 +143,9 @@
                     Toast(res.data.msg);
                 });
             },
-            //立即购买
-            buyNow(){
-                if(this.uid == undefined){
-                    Toast("请先登录");
-                    this.$router.push("/login");
-                    return;
-                }
-                console.log(this.uid,this.pid,this.val);
-                var url = "http://127.0.0.1:3000/cart";
-                var param = `uid=${this.uid}&pid=${this.pid}&count=${this.val}`;
-                this.axios.post(url,param).then(res=>{
-                    if(res.data.code == 1){
-                        this.$router.push("/order");
-                    }
-                });
+            //结算按钮，跳转到结算页面
+            orderBuy(){
+                this.$router.push("orderBuy");
             }
         },
         created() {

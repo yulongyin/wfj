@@ -1,6 +1,7 @@
 <template>
     <div class="app-login">
         <div class="mui-bar mui-bar-nav">
+			<a @click="previous" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="javascript:;"></a>
 			<h1 class="mui-title">用户登录</h1>
 		</div>
         
@@ -45,6 +46,9 @@
             }
         },
         methods:{
+            previous(){
+                history.go(-1);
+            },
 			login(){
                 var uname = this.uname;
                 var upwd = this.upwd;
@@ -57,7 +61,7 @@
                         //console.log(this.uid);
                         sessionStorage["uid"] = this.uid;
                         Toast("登录成功");
-                        this.$router.push("/member?uid="+this.uid);
+                        history.go(-1);
                     }else{
                         Toast(res.body.msg);
                     }
