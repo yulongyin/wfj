@@ -1,0 +1,6 @@
+<view class="app-attract">
+  <view class='pro-list' bindtap='allPro'>
+    <view>个人加入<text>></text></view>
+    <view>公司加入<text>></text></view>
+  </view>
+</view>

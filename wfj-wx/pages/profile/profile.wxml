@@ -1,0 +1,14 @@
+<view class='profile'>
+  <view class='avatar'>
+    <image src='http://127.0.0.1:3000/img/avatar01.png'></image>
+    <view>{{uname}}会员</view>
+  </view>
+  <view class='pro-list'>
+    <view bindtap='allPro'>会员资料<text>></text></view>
+    <view>人脉资源<text>></text></view>
+    <view>订单管理<text>></text></view>
+    <view>我的钱包<text>></text></view>
+    <view>金币池<text>></text></view>
+    <view>分享产品<text>></text></view>
+  </view>
+</view>

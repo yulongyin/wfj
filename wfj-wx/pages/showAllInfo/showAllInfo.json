@@ -1,0 +1,31 @@
+{
+  "navigationBarTitleText": "会员资料",
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "/pages/public/tabs/home.png",
+        "selectedIconPath": "/pages/public/tabs/home-active.png"
+      },
+      {
+        "pagePath": "pages/product/product",
+        "text": "微分金商城",
+        "iconPath": "/pages/public/tabs/product.png",
+        "selectedIconPath": "/pages/public/tabs/product-active.png"
+      },
+      {
+        "pagePath": "pages/message/message",
+        "text": "园区招商",
+        "iconPath": "/pages/public/tabs/message.png",
+        "selectedIconPath": "/pages/public/tabs/message-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "会员中心",
+        "iconPath": "/pages/public/tabs/profile.png",
+        "selectedIconPath": "/pages/public/tabs/profile-active.png"
+      }
+    ]
+  }
+}

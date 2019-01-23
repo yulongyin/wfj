@@ -1,0 +1,17 @@
+.allInfo{
+  width:90%;
+  margin: 0 auto;
+  line-height: 40px;
+}
+.avatar{
+  width:100%;
+  text-align: center;
+}
+.avatar image{
+  width:100px;
+  height:100px;
+  margin: 0 auto;
+}
+.allInfo .allInfoItem view{
+  border-bottom: 1px solid #ccc;
+}

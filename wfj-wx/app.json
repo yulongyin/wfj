@@ -1,0 +1,46 @@
+{
+  "pages": [
+    "pages/profile/profile",
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/product/product",
+    "pages/message/message",
+    "pages/showAllInfo/showAllInfo",
+    "pages/attract/attract",
+    "pages/attrInfo/attrInfo"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "中联园区微分金",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "/pages/public/tabs/home.png",
+        "selectedIconPath": "/pages/public/tabs/home-active.png"
+      },
+      {
+        "pagePath": "pages/product/product",
+        "text": "微分金商城",
+        "iconPath": "/pages/public/tabs/product.png",
+        "selectedIconPath": "/pages/public/tabs/product-active.png"
+      },
+      {
+        "pagePath": "pages/attract/attract",
+        "text": "园区招商",
+        "iconPath": "/pages/public/tabs/message.png",
+        "selectedIconPath": "/pages/public/tabs/message-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "会员中心",
+        "iconPath": "/pages/public/tabs/profile.png",
+        "selectedIconPath": "/pages/public/tabs/profile-active.png"
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+.profile{
+
+}
+.avatar{
+  width:100%;
+  text-align: center;
+}
+.avatar image{
+  width:100px;
+  height:100px;
+  margin: 0 auto;
+}
+.pro-list{
+  width:100%;
+  margin-top: 20px;
+}
+.pro-list view{
+  width:90%;
+  margin: 0 auto;
+  line-height: 40px;
+  border-bottom:1px solid #ccc;
+}
+.pro-list view text{
+  float: right;
+}

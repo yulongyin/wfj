@@ -1,0 +1,13 @@
+<view class='allInfo'>
+  <view class='avatar'>
+    <image src='http://127.0.0.1:3000/img/avatar01.png'></image>
+    <view>{{uname}}会员</view>
+  </view>
+  <view class='allInfoItem'>
+    <view>姓名：</view>
+    <view>性别：</view>
+    <view>出生日期：</view>
+    <view>邮箱：</view>
+    <view>手机号：</view>
+  </view>
+</view>

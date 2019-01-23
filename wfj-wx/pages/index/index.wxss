@@ -1,0 +1,22 @@
+/**index.wxss**/
+/**功能一:轮播图**/
+.slider,.slider swiper,.slider image{
+  height:260rpx;
+  width:100%;
+}
+.card{
+  width: 90%;
+  margin: 0 auto;
+  text-align: center;
+}
+.card text:first-child{
+  font-size: 20px;
+}
+.card text:last-child{
+  font-size: 16px;
+  text-indent: 32px;
+}
+/**功能三:分隔块**/
+.divider{
+  height:30rpx;
+}
